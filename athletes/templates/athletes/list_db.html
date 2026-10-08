@@ -1,0 +1,97 @@
+{% extends 'athletes/base.html' %}
+
+{% block title %}Данные из базы{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Просмотр данных</h1>
+
+<div class="btn-group mb-4">
+    <a href="/list/?source=files" class="btn btn-outline-secondary">Файлы</a>
+    <a href="/list/?source=db" class="btn btn-primary">База данных</a>
+</div>
+
+<div class="mb-3 col-md-4">
+    <input type="text" id="search" class="form-control" placeholder="Поиск...">
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Вид спорта</th>
+            <th>Возраст</th>
+            <th>Страна</th>
+            <th>Достижения</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+        {% for a in athletes %}
+        <tr>
+            <td>{{ a.name }}</td>
+            <td>{{ a.sport }}</td>
+            <td>{{ a.age }}</td>
+            <td>{{ a.country }}</td>
+            <td>{{ a.achievements }}</td>
+            <td>
+                <a href="/edit/{{ a.id }}/" class="btn btn-sm btn-warning">Ред.</a>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="{{ a.id }}">Удал.</button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Записей нет</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const searchInput = document.getElementById('search');
+    const tbody = document.getElementById('tbody');
+    const csrf = '{{ csrf_token }}';
+
+    function renderRows(items) {
+        tbody.innerHTML = '';
+        if (items.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6">Ничего не найдено</td></tr>';
+            return;
+        }
+        items.forEach(function(item) {
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td>' + item.name + '</td>' +
+                '<td>' + item.sport + '</td>' +
+                '<td>' + item.age + '</td>' +
+                '<td>' + item.country + '</td>' +
+                '<td>' + item.achievements + '</td>' +
+                '<td>' +
+                '<a href="/edit/' + item.id + '/" class="btn btn-sm btn-warning">Ред.</a> ' +
+                '<button class="btn btn-sm btn-danger delete-btn" data-id="' + item.id + '">Удал.</button>' +
+                '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    function doSearch() {
+        fetch('/search/?q=' + encodeURIComponent(searchInput.value))
+            .then(function(response) { return response.json(); })
+            .then(function(data) { renderRows(data.items); });
+    }
+
+    searchInput.addEventListener('input', doSearch);
+
+    tbody.addEventListener('click', function(e) {
+        const btn = e.target.closest('.delete-btn');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        if (!confirm('Удалить запись?')) return;
+        fetch('/delete/' + id + '/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrf}
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) { if (data.ok) doSearch(); });
+    });
+</script>
+{% endblock %}

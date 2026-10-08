@@ -1,0 +1,28 @@
+{% extends 'athletes/base.html' %}
+
+{% block title %}Добавить спортсмена{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Добавить спортсмена</h1>
+
+<form method="post" class="col-md-6">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p><strong>Куда сохранить:</strong></p>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="save_to" id="save_to_db" value="db" checked>
+        <label class="form-check-label" for="save_to_db">В базу данных</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="save_to" id="save_to_json" value="json">
+        <label class="form-check-label" for="save_to_json">В JSON-файл</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="save_to" id="save_to_xml" value="xml">
+        <label class="form-check-label" for="save_to_xml">В XML-файл</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+</form>
+{% endblock %}

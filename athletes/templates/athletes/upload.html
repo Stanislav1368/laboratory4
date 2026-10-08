@@ -1,0 +1,16 @@
+{% extends 'athletes/base.html' %}
+
+{% block title %}Загрузка файла{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Загрузка файла JSON/XML</h1>
+
+<form method="post" enctype="multipart/form-data" class="col-md-6">
+    {% csrf_token %}
+    <div class="mb-3">
+        <input class="form-control" type="file" name="file" accept=".json,.xml">
+    </div>
+    <p class="text-muted">Имя файла на сервере генерируется автоматически.</p>
+    <button type="submit" class="btn btn-primary">Загрузить</button>
+</form>
+{% endblock %}

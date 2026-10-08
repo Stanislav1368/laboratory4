@@ -1,0 +1,13 @@
+{% extends 'athletes/base.html' %}
+
+{% block title %}Учёт спортсменов — главная{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Приложение учёта спортсменов</h1>
+<p class="lead">Данные можно хранить в базе данных SQLite или в файлах JSON/XML.</p>
+<ul class="list-group w-50">
+    <li class="list-group-item"><a href="{% url 'add_athlete' %}">Добавить спортсмена</a></li>
+    <li class="list-group-item"><a href="{% url 'upload_file' %}">Загрузить файл JSON/XML</a></li>
+    <li class="list-group-item"><a href="{% url 'list_data' %}">Посмотреть данные</a></li>
+</ul>
+{% endblock %}
