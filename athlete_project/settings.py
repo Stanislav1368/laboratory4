@@ -105,5 +105,5 @@ JSON_DIR = DATA_DIR / 'json'
 XML_DIR = DATA_DIR / 'xml'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://django-3.de1.netrun.io',
+    'https://laba4.de1.netrun.io',
 ]
